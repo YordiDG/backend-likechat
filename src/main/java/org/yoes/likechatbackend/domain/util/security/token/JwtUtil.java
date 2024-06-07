@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.yoes.likechatbackend.domain.model.entities.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -71,5 +72,10 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public boolean isValidResetToken(User user, String token) {
+        final String email = extractUsername(token);
+        return (email.equals(user.getEmail()) && !isTokenExpired(token));
     }
 }

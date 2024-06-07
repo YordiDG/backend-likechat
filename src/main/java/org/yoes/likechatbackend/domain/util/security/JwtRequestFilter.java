@@ -1,14 +1,14 @@
 package org.yoes.likechatbackend.domain.util.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.yoes.likechatbackend.domain.util.security.token.JwtUtil;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -18,8 +18,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response, javax.servlet.FilterChain filterChain)
+            throws javax.servlet.ServletException, IOException {
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
@@ -35,7 +35,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 return;
             }
         }
-        // Si no se proporciona ningún token en el encabezado de autorización, devolver un error de no autorizado
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
