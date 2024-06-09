@@ -15,10 +15,10 @@ import java.util.Map;
 
 @Component
 public class UserWithTokenDTO {
-    @Value("${secretKey}")
+    @Value("secretKey")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwtExpiration}")
     private long expirationTime;
 
     private User user;
@@ -28,12 +28,6 @@ public class UserWithTokenDTO {
         this.user = user;
         this.token = token;
     }
-
-
-
-
-
-
 
 
     public UserWithTokenDTO() {

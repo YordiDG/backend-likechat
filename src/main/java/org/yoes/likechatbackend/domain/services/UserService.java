@@ -25,5 +25,9 @@ public interface UserService {
     void resetFailedLoginAttempts(User user);
 
     void uploadPhoto(User user, byte[] photoData);
+
+    User register(User user);
+
+
 }
 

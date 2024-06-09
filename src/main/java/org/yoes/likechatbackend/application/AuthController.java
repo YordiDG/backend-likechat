@@ -1,27 +1,27 @@
 package org.yoes.likechatbackend.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yoes.likechatbackend.domain.model.entities.User;
-import org.yoes.likechatbackend.domain.services.Impl.AuthenticationServiceToken;
 import org.yoes.likechatbackend.domain.services.UserService;
 import org.yoes.likechatbackend.domain.util.security.token.Impl.AuthenticationService;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     @Autowired
+    @Lazy
     private AuthenticationService authenticationService;
 
     @Autowired
-    private AuthenticationServiceToken authenticationServiceToken;
-
-    @Autowired
+    @Lazy
     private UserService userService;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> credentials)
@@ -40,7 +40,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            User registeredUser = authenticationService.register(user);
+            User registeredUser = userService.register(user);
             return ResponseEntity.ok(registeredUser);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());

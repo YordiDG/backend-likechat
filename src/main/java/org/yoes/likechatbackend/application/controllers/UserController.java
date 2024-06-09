@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
@@ -26,10 +26,10 @@ public class UserController {
     private UserService userServices;
 
 
-    @Value("${jwt.secret }")
+    @Value("${secretKey}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwtExpiration}")
     private long expirationTime;
 
     @GetMapping("/{userId}")

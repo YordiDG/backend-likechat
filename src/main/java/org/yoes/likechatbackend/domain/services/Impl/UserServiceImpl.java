@@ -1,6 +1,7 @@
 package org.yoes.likechatbackend.domain.services.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.yoes.likechatbackend.domain.model.entities.User;
@@ -18,7 +19,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    @Lazy
     private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     private JwtUtil tokenService;
@@ -160,4 +163,36 @@ public class UserServiceImpl implements UserService {
         user.setPhoto(photoData);
         userRepository.save(user);
     }
+
+    @Override
+    public User register(User user) {
+        String email = user.getEmail();
+
+        if (!isValidEmailDomain(email)) {
+            throw new IllegalArgumentException("Invalid email domain");
+        }
+
+        if (isEmailAlreadyRegistered(email)) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+
+        if (!isValidPassword(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password format.");
+        }
+
+        // Encode password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Guardar el usuario en la base de datos
+        return userRepository.save(user);
+    }
+
+    private boolean isValidEmailDomain(String email) {
+        String domain = email.substring(email.lastIndexOf("@") + 1);
+
+        return domain.equalsIgnoreCase("gmail.com") ||
+                domain.equalsIgnoreCase("hotmail.com") ||
+                domain.equalsIgnoreCase("outlook.com");
+    }
+
 }

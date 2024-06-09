@@ -29,8 +29,12 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    public AuthenticationService(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(email);
@@ -53,6 +57,7 @@ public class AuthenticationService implements UserDetailsService {
         return jwtUtil.generateToken(userDetails);
     }
 
+
     public User register(User user) {
         String email = user.getEmail();
 
@@ -74,4 +79,7 @@ public class AuthenticationService implements UserDetailsService {
                 domain.equalsIgnoreCase("outlook.com");
     }
 
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 }
