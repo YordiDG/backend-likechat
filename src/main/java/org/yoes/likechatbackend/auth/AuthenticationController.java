@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.yoes.likechatbackend.domain.requestCode.ActivationRequest;
 
 @RestController
 @RequestMapping("auth")
@@ -37,12 +38,12 @@ public class AuthenticationController {
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
-    @GetMapping("/activate-account")
-    public void confirm(
-            @RequestParam String token
+
+    @PostMapping("/activate-account")
+    public ResponseEntity<?> confirm(
+            @RequestBody ActivationRequest request
     ) throws MessagingException {
-        service.activateAccount(token);
+        service.activateAccount(request.getEmail(), request.getCode());
+        return ResponseEntity.ok().build();
     }
-
-
 }

@@ -83,23 +83,29 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void activateAccount(String token) throws MessagingException {
-        Token savedToken = tokenRepository.findByToken(token)
-                // todo exception has to be defined
+    public void activateAccount(String email, String code) throws MessagingException {
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Token savedToken = tokenRepository.findByToken(code)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (!savedToken.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Invalid token for the given email");
+        }
+
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getUser());
             throw new RuntimeException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        var user = userRepository.findById(savedToken.getUser().getId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         user.setEnabled(true);
         userRepository.save(user);
 
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
     }
+
 
     private String generateAndSaveActivationToken(User user) {
         // Generate a token
